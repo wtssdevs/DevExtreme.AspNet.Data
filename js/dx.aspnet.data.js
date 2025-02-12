@@ -179,10 +179,13 @@
             return result;
         }
 
-        function handleInsertUpdateSuccess(d, res, xhr) {
-            var mime = xhr.getResponseHeader("Content-Type"),
-                isJSON = mime && mime.indexOf("application/json") > -1;
-            d.resolve(isJSON ? JSON.parse(res) : res);
+        function handleInsertUpdateSuccess(d, res, xhr) {            
+            var parse = safeParseJSON(res);
+            if (parse) {
+                d.resolve(parse);
+            } else {
+                d.resolve(res);
+            }
         }
 
         var result = {
